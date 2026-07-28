@@ -65,12 +65,12 @@ def get_llm():
     if google_key and ChatGoogleGenerativeAI is not None:
         try:
             return ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash",
+                model="gemini-2.0-flash-lite",
                 google_api_key=google_key,
                 temperature=0.2
             )
         except Exception as e:
-            print(f"[WARN] Error inicializando ChatGoogleGenerativeAI con gemini-2.0-flash: {e}")
+            print(f"[WARN] Error inicializando ChatGoogleGenerativeAI con gemini-2.0-flash-lite: {e}")
 
     if openai_key and ChatOpenAI is not None:
         try:
@@ -167,8 +167,8 @@ class CorporateRAGChain:
         raw_answer = None
 
         google_key = os.getenv("GOOGLE_API_KEY")
-        # Probar modelos Gemini válidos (gemini-2.0-flash y gemini-2.0-flash-lite)
-        gemini_candidates = ["gemini-2.0-flash", "gemini-2.0-flash-lite"]
+        # Probar modelos Gemini válidos (gemini-2.0-flash-lite primero por velocidad y cuota)
+        gemini_candidates = ["gemini-2.0-flash-lite", "gemini-2.0-flash"]
 
         if google_key and ChatGoogleGenerativeAI is not None:
             for model_name in gemini_candidates:

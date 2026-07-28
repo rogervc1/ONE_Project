@@ -1,5 +1,6 @@
 import os
 from typing import List, Dict, Any
+from dotenv import load_dotenv
 
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
@@ -43,46 +44,53 @@ REGLAS DE RESPUESTA:
 Respuesta:"""
 
 
-def get_llm():
+def get_llm_providers():
     """
-    Inicializa el LLM según las claves disponibles en el entorno.
-    Soporta Groq (Llama 3.3 70B), Google Gemini (gemini-2.0-flash) y OpenAI (gpt-4o-mini).
+    Carga las variables de entorno actualizadas y retorna una lista ordenada de LLMs disponibles.
+    Prioriza: Groq (Llama 3.3 70B), Gemini (gemini-2.0-flash-lite / gemini-2.0-flash), OpenAI (gpt-4o-mini).
     """
+    load_dotenv(override=True)
     groq_key = os.getenv("GROQ_API_KEY")
     google_key = os.getenv("GOOGLE_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
 
+    providers = []
+
+    # 1. Groq (Alta velocidad y alta cuota gratuita)
     if groq_key and ChatGroq is not None:
         try:
-            return ChatGroq(
+            providers.append(("Groq (Llama 3.3 70B)", ChatGroq(
                 model_name="llama-3.3-70b-versatile",
                 groq_api_key=groq_key,
                 temperature=0.2
-            )
+            )))
         except Exception as e:
             print(f"[WARN] Error inicializando ChatGroq: {e}")
 
+    # 2. Google Gemini (gemini-2.0-flash-lite y gemini-2.0-flash)
     if google_key and ChatGoogleGenerativeAI is not None:
-        try:
-            return ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash-lite",
-                google_api_key=google_key,
-                temperature=0.2
-            )
-        except Exception as e:
-            print(f"[WARN] Error inicializando ChatGoogleGenerativeAI con gemini-2.0-flash-lite: {e}")
+        for m_name in ["gemini-2.0-flash-lite", "gemini-2.0-flash"]:
+            try:
+                providers.append((f"Google Gemini ({m_name})", ChatGoogleGenerativeAI(
+                    model=m_name,
+                    google_api_key=google_key,
+                    temperature=0.2
+                )))
+            except Exception as e:
+                print(f"[WARN] Error inicializando ChatGoogleGenerativeAI ({m_name}): {e}")
 
+    # 3. OpenAI
     if openai_key and ChatOpenAI is not None:
         try:
-            return ChatOpenAI(
+            providers.append(("OpenAI (gpt-4o-mini)", ChatOpenAI(
                 model="gpt-4o-mini",
                 openai_api_key=openai_key,
                 temperature=0.2
-            )
+            )))
         except Exception as e:
             print(f"[WARN] Error inicializando ChatOpenAI: {e}")
 
-    return None
+    return providers
 
 
 class CorporateRAGChain:
@@ -93,7 +101,6 @@ class CorporateRAGChain:
 
     def __init__(self, vector_store_manager: VectorStoreManager = None):
         self.vector_mgr = vector_store_manager or VectorStoreManager()
-        self.llm = get_llm()
         self.prompt = ChatPromptTemplate.from_template(SYSTEM_PROMPT)
 
     def _format_context(self, docs: List[Document]) -> str:
@@ -132,8 +139,11 @@ class CorporateRAGChain:
     def answer_question(self, question: str, category_filter: str = None) -> Dict[str, Any]:
         """
         Procesa la consulta del usuario mediante el pipeline RAG.
-        Retorna la respuesta generada y la lista estructurada de fuentes utilizadas.
+        Intenta proveedores LLM en secuencia y maneja fallbacks.
         """
+        # Recargar variables de entorno activamente
+        load_dotenv(override=True)
+
         # 1. Recuperación de documentos semánticamente similares
         retrieved_docs = self.vector_mgr.search_similarity(
             query=question,
@@ -148,78 +158,57 @@ class CorporateRAGChain:
                 "has_context": False
             }
 
-        # 2. Si no hay LLM configurado (API Key faltante), retornar extractos recuperados
-        if self.llm is None:
+        # 2. Obtener lista de proveedores LLM configurados
+        providers = get_llm_providers()
+
+        if not providers:
             context_str = "\n\n".join([f"- **{d.metadata.get('source')}**: {d.page_content[:200]}..." for d in retrieved_docs])
             return {
                 "answer": (
-                    "⚠️ **Modo Demostración sin API Key de LLM**\n\n"
+                    "⚠️ **Sin API Key Configurada**\n\n"
                     "Se encontraron los siguientes fragmentos relevantes en los documentos de la empresa:\n\n"
                     f"{context_str}\n\n"
-                    "*Nota: Configura `GOOGLE_API_KEY` o `OPENAI_API_KEY` en el archivo `.env` para habilitar la generación fluida de respuestas por IA.*"
+                    "*Por favor configura `GOOGLE_API_KEY` o `GROQ_API_KEY` en tu archivo `.env`.*"
                 ),
                 "sources": [d.metadata for d in retrieved_docs],
                 "has_context": True
             }
 
-        # 3. Formateo de contexto y ejecución de la cadena LCEL
+        # 3. Formatear contexto e intentar la ejecución con los LLMs disponibles
         context_text = self._format_context(retrieved_docs)
         raw_answer = None
+        last_error = None
 
-        google_key = os.getenv("GOOGLE_API_KEY")
-        # Probar modelos Gemini válidos (gemini-2.0-flash-lite primero por velocidad y cuota)
-        gemini_candidates = ["gemini-2.0-flash-lite", "gemini-2.0-flash"]
-
-        if google_key and ChatGoogleGenerativeAI is not None:
-            for model_name in gemini_candidates:
-                try:
-                    llm_candidate = ChatGoogleGenerativeAI(
-                        model=model_name,
-                        google_api_key=google_key,
-                        temperature=0.2
-                    )
-                    chain = self.prompt | llm_candidate | StrOutputParser()
-                    raw_answer = chain.invoke({
-                        "context": context_text,
-                        "question": question
-                    })
-                    break  # Respuesta generada con éxito
-                except Exception as e:
-                    err_str = str(e)
-                    if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                        raw_answer = (
-                            "⏳ **Límite de Consultas Alcanzado (Rate Limit de Gemini)**\n\n"
-                            "La API gratuita de Google Gemini ha alcanzado temporalmente el límite de peticiones por minuto (15 RPM).\n"
-                            "Por favor espera **30 a 60 segundos** e intenta tu pregunta nuevamente."
-                        )
-                        break
-                    else:
-                        print(f"[WARN] Error al consultar modelo {model_name}: {err_str[:150]}")
-                        continue
-
-        if not raw_answer and self.llm is not None:
+        for name, llm in providers:
             try:
-                chain = self.prompt | self.llm | StrOutputParser()
+                chain = self.prompt | llm | StrOutputParser()
                 raw_answer = chain.invoke({
                     "context": context_text,
                     "question": question
                 })
+                if raw_answer:
+                    break
             except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                    raw_answer = (
-                        "⏳ **Límite de Consultas Alcanzado (Rate Limit de Gemini)**\n\n"
-                        "La API gratuita de Google Gemini ha alcanzado temporalmente el límite de peticiones por minuto (15 RPM).\n"
-                        "Por favor espera **30 a 60 segundos** e intenta tu pregunta nuevamente."
-                    )
-                else:
-                    raw_answer = f"Error al generar la respuesta con la IA: {err_str}"
+                last_error = str(e)
+                print(f"[WARN] Error al consultar {name}: {last_error[:150]}")
+                continue
 
+        # 4. Manejo de respuesta final o error de cuota si todos fallan
         if not raw_answer:
-            raw_answer = "No se pudo conectar con el servicio de IA. Revisa tu clave de API en el archivo `.env`."
+            if last_error and ("429" in last_error or "RESOURCE_EXHAUSTED" in last_error):
+                raw_answer = (
+                    "🚨 **Cuota Diaria de la API Key Excedida en Google (Limit: 0)**\n\n"
+                    "Tu clave de API de Google Gemini en el archivo `.env` pertenece a un proyecto de Google Cloud con la cuota diaria en 0.\n\n"
+                    "**Solución en 1 minuto:**\n"
+                    "1. Ingresa a **[Google AI Studio](https://aistudio.google.com/app/apikey)**.\n"
+                    "2. Haz clic en **Create API key** y selecciona **'Create API key in NEW project'**.\n"
+                    "3. Copia esa nueva clave, pégala en tu archivo `.env` (`GOOGLE_API_KEY=...`) y guarda el archivo.\n\n"
+                    "*Alternativa:* También puedes usar **Groq API** obteniendo una clave gratis en [console.groq.com/keys](https://console.groq.com/keys) e ingresándola como `GROQ_API_KEY`."
+                )
+            else:
+                raw_answer = f"No se pudo generar la respuesta con la IA. Detalle del error: {last_error or 'Error desconocido'}"
 
-
-        # 4. Construcción de metadatos de fuentes para la UI
+        # 5. Construcción de metadatos de fuentes para la UI
         sources_list = []
         for d in retrieved_docs:
             sources_list.append({

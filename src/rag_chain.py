@@ -35,31 +35,26 @@ REGLAS DE RESPUESTA:
 3. NO inventes políticas, cifras, fechas ni nombres que no figuren en los documentos.
 4. Al final de tu respuesta, incluye siempre una sección titulada "**Fuentes Consultadas:**" listando los documentos exactos utilizados (Nombre de archivo, Categoría y Página/Fila si aplica).
 
-Pregunta del Colaborador: {question}
 Respuesta:"""
 
 
 def get_llm():
     """
     Inicializa el LLM según las claves disponibles en el entorno.
-    Intenta candidatos de modelo de Gemini (gemini-2.0-flash, gemini-1.5-flash-latest, gemini-1.5-flash)
-    y luego OpenAI (gpt-4o-mini).
+    Usa el modelo oficial gemini-2.0-flash (o gemini-2.0-flash-lite) para Gemini API.
     """
     google_key = os.getenv("GOOGLE_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
 
     if google_key and ChatGoogleGenerativeAI is not None:
-        gemini_models = ["gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-2.5-flash"]
-        for model_name in gemini_models:
-            try:
-                llm = ChatGoogleGenerativeAI(
-                    model=model_name,
-                    google_api_key=google_key,
-                    temperature=0.2
-                )
-                return llm
-            except Exception as e:
-                print(f"[WARN] No se pudo inicializar Gemini con modelo {model_name}: {e}")
+        try:
+            return ChatGoogleGenerativeAI(
+                model="gemini-2.0-flash",
+                google_api_key=google_key,
+                temperature=0.2
+            )
+        except Exception as e:
+            print(f"[WARN] Error inicializando ChatGoogleGenerativeAI con gemini-2.0-flash: {e}")
 
     if openai_key and ChatOpenAI is not None:
         try:
@@ -72,7 +67,6 @@ def get_llm():
             print(f"[WARN] Error inicializando ChatOpenAI: {e}")
 
     return None
-
 
 
 class CorporateRAGChain:
@@ -157,7 +151,8 @@ class CorporateRAGChain:
         raw_answer = None
 
         google_key = os.getenv("GOOGLE_API_KEY")
-        gemini_candidates = ["gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-2.5-flash", "gemini-1.5-pro"]
+        # Probar modelos Gemini válidos (gemini-2.0-flash y gemini-2.0-flash-lite)
+        gemini_candidates = ["gemini-2.0-flash", "gemini-2.0-flash-lite"]
 
         if google_key and ChatGoogleGenerativeAI is not None:
             for model_name in gemini_candidates:
@@ -172,10 +167,19 @@ class CorporateRAGChain:
                         "context": context_text,
                         "question": question
                     })
-                    break  # Éxito!
+                    break  # Respuesta generada con éxito
                 except Exception as e:
-                    print(f"[WARN] Falló el modelo Gemini '{model_name}': {e}")
-                    continue
+                    err_str = str(e)
+                    if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                        raw_answer = (
+                            "⏳ **Límite de Consultas Alcanzado (Rate Limit de Gemini)**\n\n"
+                            "La API gratuita de Google Gemini ha alcanzado temporalmente el límite de peticiones por minuto (15 RPM).\n"
+                            "Por favor espera **30 a 60 segundos** e intenta tu pregunta nuevamente."
+                        )
+                        break
+                    else:
+                        print(f"[WARN] Error al consultar modelo {model_name}: {err_str[:150]}")
+                        continue
 
         if not raw_answer and self.llm is not None:
             try:
@@ -185,7 +189,15 @@ class CorporateRAGChain:
                     "question": question
                 })
             except Exception as e:
-                raw_answer = f"Error al generar la respuesta con la IA: {str(e)}"
+                err_str = str(e)
+                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                    raw_answer = (
+                        "⏳ **Límite de Consultas Alcanzado (Rate Limit de Gemini)**\n\n"
+                        "La API gratuita de Google Gemini ha alcanzado temporalmente el límite de peticiones por minuto (15 RPM).\n"
+                        "Por favor espera **30 a 60 segundos** e intenta tu pregunta nuevamente."
+                    )
+                else:
+                    raw_answer = f"Error al generar la respuesta con la IA: {err_str}"
 
         if not raw_answer:
             raw_answer = "No se pudo conectar con el servicio de IA. Revisa tu clave de API en el archivo `.env`."

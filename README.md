@@ -218,4 +218,4 @@ Aquí se puede visualizar el Agente Corporativo de IA ejecutándose activamente 
 ---
 
 ## ✒️ Autor
-Proyecto desarrollado para el Desafío **Alura Agentes**.
+Proyecto desarrollado para el Desafío **Alura Agentes** por **Aaron Roger Vilca Cari**.

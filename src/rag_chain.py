@@ -15,6 +15,11 @@ try:
 except ImportError:
     ChatOpenAI = None
 
+try:
+    from langchain_groq import ChatGroq
+except ImportError:
+    ChatGroq = None
+
 from src import config
 from src.vector_store import VectorStoreManager
 
@@ -41,10 +46,21 @@ Respuesta:"""
 def get_llm():
     """
     Inicializa el LLM según las claves disponibles en el entorno.
-    Usa el modelo oficial gemini-2.0-flash (o gemini-2.0-flash-lite) para Gemini API.
+    Soporta Groq (Llama 3.3 70B), Google Gemini (gemini-2.0-flash) y OpenAI (gpt-4o-mini).
     """
+    groq_key = os.getenv("GROQ_API_KEY")
     google_key = os.getenv("GOOGLE_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
+
+    if groq_key and ChatGroq is not None:
+        try:
+            return ChatGroq(
+                model_name="llama-3.3-70b-versatile",
+                groq_api_key=groq_key,
+                temperature=0.2
+            )
+        except Exception as e:
+            print(f"[WARN] Error inicializando ChatGroq: {e}")
 
     if google_key and ChatGoogleGenerativeAI is not None:
         try:

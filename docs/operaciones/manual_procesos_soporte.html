@@ -2,22 +2,73 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Manual Operativo de Soporte de Tecnologías y Sistemas</title>
+    <title>Manual Operativo de Soporte Técnico e Infraestructura</title>
 </head>
 <body>
     <h1>Manual Operativo de Soporte Técnico e Infraestructura</h1>
-    <p><strong>Categoría:</strong> Operacional / Datos y Sistemas</p>
-    
+    <p><strong>Código:</strong> MAN-OPS-003</p>
+    <p><strong>Última Actualización:</strong> 10 de Febrero de 2026</p>
+    <p><strong>Responsable:</strong> Gerencia de Tecnología e Infraestructura</p>
+
     <h2>1. Niveles de Atención de Incidentes (SLA)</h2>
+    <table>
+        <tr><th>Severidad</th><th>Descripción</th><th>Tiempo de Respuesta</th><th>Tiempo de Resolución</th><th>Ejemplos</th></tr>
+        <tr><td>Severidad 1 - Crítico</td><td>Caída total de servicios de producción que afecta a todos los usuarios o clientes</td><td>15 minutos</td><td>2 horas</td><td>Caída del servidor principal, fallo en el sistema de pagos, brecha de seguridad activa</td></tr>
+        <tr><td>Severidad 2 - Alta</td><td>Degradación parcial de sistemas clave que impacta la productividad de un equipo o área</td><td>1 hora</td><td>6 horas</td><td>Lentitud extrema del ERP, fallo en el servicio de correo electrónico, error en integración con proveedores</td></tr>
+        <tr><td>Severidad 3 - Media</td><td>Incidentes que afectan a usuarios individuales sin impacto generalizado</td><td>4 horas</td><td>24 horas</td><td>Problema con impresora de red, error en una aplicación específica, fallo en VPN individual</td></tr>
+        <tr><td>Severidad 4 - Baja</td><td>Solicitudes de servicio, configuraciones y consultas generales</td><td>24 horas</td><td>48 horas</td><td>Solicitud de nuevo software, cambio de contraseña, configuración de acceso a carpeta compartida</td></tr>
+    </table>
+
+    <h2>2. Protocolo de Onboarding IT para Nuevos Empleados</h2>
+    <p>El líder del área debe registrar la solicitud de Onboarding IT con al menos 5 días hábiles de anticipación mediante el formulario FOR-IT-001 en el portal de servicios internos. El equipo de TI asignará automáticamente:</p>
     <ul>
-        <li><strong>Severidad 1 (Crítico):</strong> Caída total de servicios de producción. Tiempo de respuesta: 15 minutos. Solución estimada: 2 horas.</li>
-        <li><strong>Severidad 2 (Alta):</strong> Degradación parcial de sistemas clave. Tiempo de respuesta: 1 hora. Solución estimada: 6 horas.</li>
-        <li><strong>Severidad 3 (Normal):</strong> Solicitudes de acceso, cuentas o configuraciones. Tiempo de respuesta: 24 horas. Solución estimada: 48 horas.</li>
+        <li>Cuenta de correo electrónico corporativo (nombre.apellido@empresa.com)</li>
+        <li>Licencias de software según el perfil del puesto (Microsoft 365, Slack, Zoom, herramientas de desarrollo si aplica)</li>
+        <li>Acceso a repositorios de código y documentación técnica (GitHub Enterprise, Confluence)</li>
+        <li>Credenciales de VPN para acceso remoto seguro</li>
+        <li>Equipo de cómputo configurado (laptop corporativa con imagen estándar de seguridad)</li>
+        <li>Tarjeta de acceso físico a las instalaciones</li>
+        <li>Alta en el sistema HRMS y en la plataforma de capacitación interna</li>
     </ul>
 
-    <h2>2. Protocolo para Creación de Accesos de Nuevos Empleados</h2>
-    <p>El líder de área debe registrar la solicitud de Onboarding IT con al menos 3 días de anticipación mediante el formulario del portal de servicios. Se asignará automáticamente cuenta de correo corporativo, licencias de software y accesos al repositorio.</p>
+    <h2>3. Protocolo de Offboarding IT para Colaboradores que Dejan la Empresa</h2>
+    <p>Al momento de la notificación de baja del colaborador, el área de Recursos Humanos debe enviar la solicitud de Offboarding IT con al menos 3 días hábiles de anticipación. El equipo de TI procederá a:</p>
+    <ul>
+        <li>Revocar accesos a todos los sistemas corporativos en un plazo máximo de 4 horas desde la fecha efectiva de baja</li>
+        <li>Realizar respaldo de archivos del colaborador en el servidor compartido del área</li>
+        <li>Desactivar la cuenta de correo electrónico y configurar un reenvío automático al líder del área durante 30 días</li>
+        <li>Recuperar el equipo de cómputo corporativo y dispositivos asignados</li>
+        <li>Revocar la tarjeta de acceso físico a las instalaciones</li>
+    </ul>
 
-    <p><strong>Soporte Directo:</strong> soporte.it@empresa.com | Canal `#it-helpdesk`</p>
+    <h2>4. Política de Contraseñas y Seguridad de Acceso</h2>
+    <ul>
+        <li>Las contraseñas deben tener un mínimo de 12 caracteres, incluyendo mayúsculas, minúsculas, números y caracteres especiales.</li>
+        <li>Las contraseñas deben cambiarse obligatoriamente cada 90 días.</li>
+        <li>Está prohibido reutilizar las últimas 6 contraseñas.</li>
+        <li>La autenticación de dos factores (2FA) es obligatoria para todos los sistemas críticos (correo electrónico, VPN, ERP, repositorios de código).</li>
+        <li>Después de 5 intentos fallidos de inicio de sesión, la cuenta se bloquea automáticamente durante 30 minutos.</li>
+        <li>Está estrictamente prohibido compartir credenciales de acceso con otros colaboradores o terceros.</li>
+    </ul>
+
+    <h2>5. Política de Respaldos y Recuperación de Datos</h2>
+    <p>Los respaldos de los sistemas críticos de la empresa se realizan de la siguiente manera:</p>
+    <ul>
+        <li>Respaldo incremental diario a las 02:00 AM (hora local) con retención de 30 días.</li>
+        <li>Respaldo completo semanal los domingos a las 01:00 AM con retención de 12 semanas.</li>
+        <li>Respaldo completo mensual el primer domingo de cada mes con retención de 12 meses.</li>
+        <li>Los respaldos se almacenan en tres ubicaciones: servidor local, servidor en la nube de Oracle Cloud Infrastructure (OCI) y copia offline en cinta magnética.</li>
+        <li>El tiempo de recuperación objetivo (RTO) para sistemas críticos es de 4 horas y el punto de recuperación objetivo (RPO) es de 24 horas.</li>
+    </ul>
+
+    <h2>6. Horario de Soporte y Canales de Contacto</h2>
+    <ul>
+        <li>Horario de mesa de ayuda: Lunes a Viernes de 7:00 AM a 7:00 PM. Sábados de 9:00 AM a 1:00 PM.</li>
+        <li>Soporte de emergencias Severidad 1: Disponible 24/7 a través del número de guardia +51 999 888 777.</li>
+        <li>Correo electrónico: soporte.it@empresa.com</li>
+        <li>Canal de Slack: #it-helpdesk</li>
+        <li>Portal de tickets: https://soporte.empresa.com</li>
+        <li>Extensión telefónica: 1500</li>
+    </ul>
 </body>
 </html>

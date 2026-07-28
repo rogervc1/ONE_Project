@@ -1,19 +1,50 @@
 {
   "titulo": "Política Financiera de Reembolso de Gastos de Viaje y Viáticos",
-  "categoria": "Financiero y Contable",
   "codigo": "POL-FIN-002",
+  "categoria": "Financiero y Contable",
+  "ultima_actualizacion": "2026-03-01",
+  "aprobado_por": "Dirección Financiera",
+  "alcance": "Aplica a todos los colaboradores que realicen viajes corporativos nacionales o internacionales en representación de la empresa.",
   "limites_diarios_usd": {
-    "hospedaje": 120,
-    "alimentacion": 50,
-    "transporte_local": 30
+    "hospedaje_nacional": 120,
+    "hospedaje_internacional": 200,
+    "alimentacion_nacional": 50,
+    "alimentacion_internacional": 80,
+    "transporte_local": 35,
+    "transporte_interurbano": 60,
+    "lavanderia_viajes_mayores_5_dias": 25
+  },
+  "categorias_de_vuelo": {
+    "nacional": "Clase económica obligatoria. Se debe reservar con al menos 7 días de anticipación para obtener mejores tarifas.",
+    "internacional_menos_6_horas": "Clase económica obligatoria.",
+    "internacional_mas_6_horas": "Clase ejecutiva permitida para Directores y superiores. Gerentes y demás colaboradores viajan en clase económica premium."
   },
   "reglas_reembolso": [
-    "Todos los gastos deben sustentarse obligatoriamente con factura electrónica o recibo válido a nombre de la empresa.",
-    "No se reembolsarán consumos de alcohol ni gastos de entretenimiento personal.",
-    "Las solicitudes de reembolso deben registrarse en el sistema contable dentro de los 10 días posteriores a la finalización del viaje."
+    "Todos los gastos deben sustentarse obligatoriamente con factura electrónica o recibo válido a nombre de la empresa (razón social: Corporación Global S.A., RUC: 20512345678).",
+    "No se reembolsarán consumos de bebidas alcohólicas, tabaco, entretenimiento personal ni propinas superiores al 10% del consumo.",
+    "Las solicitudes de reembolso deben registrarse en el sistema contable SAP dentro de los 10 días hábiles posteriores a la finalización del viaje.",
+    "Todo viaje debe contar con autorización previa del Director del área mediante el formulario de solicitud de viaje (FOR-FIN-015).",
+    "Los gastos que excedan los límites diarios establecidos requieren aprobación previa del Director Financiero.",
+    "El uso de vehículo propio para viajes corporativos se reembolsa a razón de $0.45 USD por kilómetro recorrido, con tope de $200 USD por viaje.",
+    "Los gastos de representación (comidas con clientes o proveedores) tienen un tope de $150 USD por evento y deben incluir la lista de asistentes y el propósito de la reunión."
+  ],
+  "anticipos_de_viaje": {
+    "descripcion": "Los colaboradores pueden solicitar un anticipo de viaje equivalente al 80% del presupuesto estimado del viaje.",
+    "plazo_liquidacion": "El anticipo debe liquidarse dentro de los 10 días hábiles posteriores al regreso del viaje. Los montos no utilizados deben devolverse mediante depósito a la cuenta corporativa.",
+    "penalizacion": "Los anticipos no liquidados en el plazo establecido serán descontados de la nómina del mes siguiente."
+  },
+  "proceso_aprobacion": [
+    "Paso 1: El colaborador completa el formulario de solicitud de viaje (FOR-FIN-015) en el sistema SAP.",
+    "Paso 2: El líder directo aprueba la solicitud y el presupuesto estimado.",
+    "Paso 3: El área de Finanzas valida la disponibilidad presupuestaria.",
+    "Paso 4: Se emite el anticipo de viaje si fue solicitado.",
+    "Paso 5: Al regresar del viaje, el colaborador registra todos los comprobantes en el sistema SAP.",
+    "Paso 6: Finanzas verifica los comprobantes y procesa el reembolso o la liquidación del anticipo en un plazo máximo de 15 días hábiles."
   ],
   "contacto_finanzas": {
     "email": "finanzas@empresa.com",
-    "slack": "#finanzas-ayuda"
+    "slack": "#finanzas-ayuda",
+    "extension": "1400",
+    "horario": "Lunes a Viernes de 9:00 a 16:00"
   }
 }

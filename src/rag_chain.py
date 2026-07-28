@@ -42,20 +42,24 @@ Respuesta:"""
 def get_llm():
     """
     Inicializa el LLM según las claves disponibles en el entorno.
-    Prioriza Google Gemini API (gemini-1.5-flash) y luego OpenAI.
+    Intenta candidatos de modelo de Gemini (gemini-2.0-flash, gemini-1.5-flash-latest, gemini-1.5-flash)
+    y luego OpenAI (gpt-4o-mini).
     """
     google_key = os.getenv("GOOGLE_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
 
     if google_key and ChatGoogleGenerativeAI is not None:
-        try:
-            return ChatGoogleGenerativeAI(
-                model="gemini-1.5-flash",
-                google_api_key=google_key,
-                temperature=0.2
-            )
-        except Exception as e:
-            print(f"[WARN] Error inicializando ChatGoogleGenerativeAI: {e}")
+        gemini_models = ["gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-2.5-flash"]
+        for model_name in gemini_models:
+            try:
+                llm = ChatGoogleGenerativeAI(
+                    model=model_name,
+                    google_api_key=google_key,
+                    temperature=0.2
+                )
+                return llm
+            except Exception as e:
+                print(f"[WARN] No se pudo inicializar Gemini con modelo {model_name}: {e}")
 
     if openai_key and ChatOpenAI is not None:
         try:
@@ -68,6 +72,7 @@ def get_llm():
             print(f"[WARN] Error inicializando ChatOpenAI: {e}")
 
     return None
+
 
 
 class CorporateRAGChain:
@@ -149,15 +154,42 @@ class CorporateRAGChain:
 
         # 3. Formateo de contexto y ejecución de la cadena LCEL
         context_text = self._format_context(retrieved_docs)
-        chain = self.prompt | self.llm | StrOutputParser()
+        raw_answer = None
 
-        try:
-            raw_answer = chain.invoke({
-                "context": context_text,
-                "question": question
-            })
-        except Exception as e:
-            raw_answer = f"Error al generar la respuesta con la IA: {str(e)}"
+        google_key = os.getenv("GOOGLE_API_KEY")
+        gemini_candidates = ["gemini-2.0-flash", "gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-2.5-flash", "gemini-1.5-pro"]
+
+        if google_key and ChatGoogleGenerativeAI is not None:
+            for model_name in gemini_candidates:
+                try:
+                    llm_candidate = ChatGoogleGenerativeAI(
+                        model=model_name,
+                        google_api_key=google_key,
+                        temperature=0.2
+                    )
+                    chain = self.prompt | llm_candidate | StrOutputParser()
+                    raw_answer = chain.invoke({
+                        "context": context_text,
+                        "question": question
+                    })
+                    break  # Éxito!
+                except Exception as e:
+                    print(f"[WARN] Falló el modelo Gemini '{model_name}': {e}")
+                    continue
+
+        if not raw_answer and self.llm is not None:
+            try:
+                chain = self.prompt | self.llm | StrOutputParser()
+                raw_answer = chain.invoke({
+                    "context": context_text,
+                    "question": question
+                })
+            except Exception as e:
+                raw_answer = f"Error al generar la respuesta con la IA: {str(e)}"
+
+        if not raw_answer:
+            raw_answer = "No se pudo conectar con el servicio de IA. Revisa tu clave de API en el archivo `.env`."
+
 
         # 4. Construcción de metadatos de fuentes para la UI
         sources_list = []

@@ -211,7 +211,7 @@ El proyecto está listo para su despliegue y uso en la nube, y es compatible con
 
 Aquí se puede visualizar el Agente Corporativo de IA ejecutándose activamente en la nube (Streamlit Community Cloud / OCI):
 
-![Ejecución del Agente Conversacional en la Nube](https://ibb.co/LzNN2Bd3)
+![Ejecución del Agente Conversacional en la Nube](https://cdn.phototourl.com/free/2026-07-28-0cc06acb-91d9-49b4-83a7-dbefe406700d.png)
 
 *(Nota: Reemplazar esta imagen por una captura de pantalla real del servicio una vez desplegado en tu panel de control).*
 

@@ -41,6 +41,7 @@ REGLAS DE RESPUESTA:
 3. NO inventes políticas, cifras, fechas ni nombres que no figuren en los documentos.
 4. Al final de tu respuesta, incluye siempre una sección titulada "**Fuentes Consultadas:**" listando los documentos exactos utilizados (Nombre de archivo, Categoría y Página/Fila si aplica).
 
+Pregunta del Colaborador: {question}
 Respuesta:"""
 
 

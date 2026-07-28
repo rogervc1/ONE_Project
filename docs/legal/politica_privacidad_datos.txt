@@ -1,0 +1,16 @@
+POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS PERSONALES
+Categoría: Legal y Compliance
+Código: POL-LEG-001
+Vigencia: 2026
+
+1. Principios Generales
+Toda la información personal de colaboradores, clientes y proveedores tratada en la empresa está sujeta a confidencialidad estricta conforme a las normativas de protección de datos personales vigentes.
+
+2. Uso de Datos e Inteligencia Artificial
+Queda expresamente prohibido introducir datos confidenciales de clientes, secretos industriales o información bancaria no pública en plataformas externas de IA no aprobadas oficialmente por el departamento de Legal e IT.
+El Agente Corporativo de IA interno utiliza un entorno aislado y seguro donde los datos procesados no se utilizan para el entrenamiento de terceros.
+
+3. Consultas y Denuncias de Compliance
+Para reportar incidentes de fuga de datos o solicitar aclaraciones sobre contratos y normativas:
+- Correo Electrónico: legal@empresa.com
+- Canal Seguro: #legal-consulta

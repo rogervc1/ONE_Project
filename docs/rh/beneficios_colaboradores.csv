@@ -1,0 +1,5 @@
+id,beneficio,categoria,cobertura_monto,requisito,contacto
+B01,Seguro de Salud Privado EPS,Salud,100% titular y 80% dependientes directos,Haber superado el periodo de prueba (3 meses),rh@empresa.com
+B02,Vales de Alimentación,Alimentacion,$250 USD mensuales abonados en tarjeta de alimentos,Todos los colaboradores activos,rh@empresa.com
+B03,Bono de Capacitación y Cursos,Educación,Hasta $1000 USD anuales para certificaciones y cursos,Aprobación del líder de área y relación con el rol,capacitacion@empresa.com
+B04,Presupuesto Equipamiento Remoto,Trabajo Remoto,$400 USD pago único para silla ergonómica y monitor,Modalidad remota o híbrida,it-helpdesk@empresa.com

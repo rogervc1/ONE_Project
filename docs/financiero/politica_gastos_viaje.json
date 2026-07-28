@@ -1,0 +1,19 @@
+{
+  "titulo": "Política Financiera de Reembolso de Gastos de Viaje y Viáticos",
+  "categoria": "Financiero y Contable",
+  "codigo": "POL-FIN-002",
+  "limites_diarios_usd": {
+    "hospedaje": 120,
+    "alimentacion": 50,
+    "transporte_local": 30
+  },
+  "reglas_reembolso": [
+    "Todos los gastos deben sustentarse obligatoriamente con factura electrónica o recibo válido a nombre de la empresa.",
+    "No se reembolsarán consumos de alcohol ni gastos de entretenimiento personal.",
+    "Las solicitudes de reembolso deben registrarse en el sistema contable dentro de los 10 días posteriores a la finalización del viaje."
+  ],
+  "contacto_finanzas": {
+    "email": "finanzas@empresa.com",
+    "slack": "#finanzas-ayuda"
+  }
+}

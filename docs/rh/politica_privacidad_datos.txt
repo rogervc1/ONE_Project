@@ -1,0 +1,55 @@
+POLÍTICA DE PRIVACIDAD, PROTECCIÓN DE DATOS PERSONALES Y USO DE TECNOLOGÍA
+Código: POL-LEG-001
+Categoría: Legal y Compliance
+Vigencia: 2026
+Última Actualización: 20 de Enero de 2026
+Aprobado por: Dirección Legal y Oficial de Protección de Datos (DPO)
+
+1. PRINCIPIOS GENERALES
+Toda la información personal de colaboradores, clientes, proveedores y socios comerciales tratada en la empresa está sujeta a confidencialidad estricta conforme a las normativas de protección de datos personales vigentes en cada jurisdicción donde opera la compañía. La empresa actúa como responsable del tratamiento de datos y se compromete a garantizar la seguridad, integridad y disponibilidad de la información personal bajo su custodia.
+
+2. CLASIFICACIÓN DE INFORMACIÓN
+La información manejada en la empresa se clasifica en cuatro niveles:
+- Pública: Información de libre difusión (comunicados de prensa, contenido del sitio web corporativo).
+- Interna: Información de uso general dentro de la organización (comunicados internos, organigramas, directorio de colaboradores).
+- Confidencial: Información restringida a personas autorizadas (estados financieros, estrategias comerciales, datos de clientes, contratos con proveedores).
+- Altamente Confidencial: Información con máximo nivel de restricción (datos biométricos, información médica, claves de acceso a sistemas críticos, propiedad intelectual en desarrollo).
+
+3. USO DE DATOS E INTELIGENCIA ARTIFICIAL
+Queda expresamente prohibido introducir datos confidenciales o altamente confidenciales de clientes, secretos industriales, información bancaria no pública o datos personales sensibles en plataformas externas de inteligencia artificial no aprobadas oficialmente por los departamentos de Legal y Tecnología. Las plataformas aprobadas actualmente son: el Agente Corporativo de IA interno, GitHub Copilot Enterprise (con repositorios privados) y Google Workspace AI.
+
+El Agente Corporativo de IA interno utiliza un entorno aislado y seguro donde los datos procesados no se utilizan para el entrenamiento de modelos de terceros ni se comparten fuera del perímetro de la organización.
+
+4. DERECHOS DE LOS TITULARES DE DATOS
+Todo titular de datos personales (colaboradores, clientes, proveedores) tiene derecho a:
+- Acceder a sus datos personales almacenados por la empresa.
+- Solicitar la rectificación de datos incorrectos o desactualizados.
+- Solicitar la eliminación de sus datos cuando ya no sean necesarios para la finalidad original.
+- Oponerse al tratamiento de sus datos para fines de marketing o comunicaciones no solicitadas.
+- Solicitar la portabilidad de sus datos a otro responsable de tratamiento.
+
+Las solicitudes deben dirigirse al Oficial de Protección de Datos (DPO) y serán atendidas en un plazo máximo de 15 días hábiles.
+
+5. INCIDENTES DE SEGURIDAD Y FUGA DE DATOS
+En caso de detectar o sospechar una fuga de datos personales, acceso no autorizado a sistemas o cualquier incidente de seguridad de la información, el colaborador debe:
+- Notificar de inmediato al equipo de Seguridad de la Información a través del canal #seguridad-incidentes en Slack o al correo seguridad@empresa.com.
+- No intentar investigar ni remediar el incidente por cuenta propia.
+- Preservar la evidencia sin modificar ni eliminar archivos o registros relacionados.
+
+El equipo de Seguridad de la Información activará el protocolo de respuesta a incidentes (PRI-SEG-001) y notificará a las autoridades regulatorias en un plazo máximo de 72 horas si el incidente involucra datos personales de terceros.
+
+6. RETENCIÓN Y DESTRUCCIÓN DE DATOS
+Los datos personales se conservarán únicamente durante el tiempo necesario para cumplir con la finalidad para la cual fueron recopilados:
+- Datos de colaboradores activos: durante toda la relación laboral y hasta 5 años después de la terminación.
+- Datos de clientes activos: durante toda la relación comercial y hasta 3 años después del último servicio.
+- Datos de candidatos no seleccionados: máximo 12 meses desde la postulación.
+- Documentos fiscales y contables: 10 años conforme a la legislación tributaria vigente.
+
+7. CONSULTAS Y DENUNCIAS DE COMPLIANCE
+Para reportar incidentes de fuga de datos, solicitar aclaraciones sobre contratos y normativas, o presentar denuncias sobre posibles infracciones:
+- Oficial de Protección de Datos (DPO): dpo@empresa.com
+- Correo Electrónico Legal: legal@empresa.com
+- Canal de Denuncias Anónimas: https://etica.empresa.com (operado por un tercero independiente)
+- Canal Seguro de Slack: #legal-consulta
+- Extensión telefónica: 1100
+- Horario de atención: Lunes a Viernes de 9:00 a 17:00

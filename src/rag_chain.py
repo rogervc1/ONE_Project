@@ -56,8 +56,11 @@ def get_llm_providers():
 
     providers = []
 
+    def is_valid_key(key: str) -> bool:
+        return bool(key and not key.startswith("tu_") and not key.startswith("your_") and len(key.strip()) > 15)
+
     # 1. Groq (Alta velocidad y alta cuota gratuita)
-    if groq_key and ChatGroq is not None:
+    if is_valid_key(groq_key) and ChatGroq is not None:
         try:
             providers.append(("Groq (Llama 3.3 70B)", ChatGroq(
                 model_name="llama-3.3-70b-versatile",
@@ -68,7 +71,7 @@ def get_llm_providers():
             print(f"[WARN] Error inicializando ChatGroq: {e}")
 
     # 2. Google Gemini (gemini-2.0-flash-lite y gemini-2.0-flash)
-    if google_key and ChatGoogleGenerativeAI is not None:
+    if is_valid_key(google_key) and ChatGoogleGenerativeAI is not None:
         for m_name in ["gemini-2.0-flash-lite", "gemini-2.0-flash"]:
             try:
                 providers.append((f"Google Gemini ({m_name})", ChatGoogleGenerativeAI(
@@ -80,7 +83,7 @@ def get_llm_providers():
                 print(f"[WARN] Error inicializando ChatGoogleGenerativeAI ({m_name}): {e}")
 
     # 3. OpenAI
-    if openai_key and ChatOpenAI is not None:
+    if is_valid_key(openai_key) and ChatOpenAI is not None:
         try:
             providers.append(("OpenAI (gpt-4o-mini)", ChatOpenAI(
                 model="gpt-4o-mini",
